@@ -66,6 +66,29 @@ The application connects to a pre-configured TiDB Cloud MySQL database. Connecti
 
 ## Recent Changes
 
+### November 21, 2025 - UI/UX Enhancements
+- **Home Page Hero Text**:
+  - Applied gradient colors to all three hero words for visual impact
+  - "Engineering" - cyan to blue gradient (from-cyan-400 to-blue-500)
+  - "Digital" - blue gradient (from-blue-400 to-blue-600)
+  - "Dominance" - violet to purple gradient (from-violet-400 to-purple-600)
+
+- **Client Portal Views - Complete Tailwind Migration**:
+  - Converted all 5 sub-views from custom CSS to Tailwind CSS
+  - Projects View: Grid layout with project cards, status badges, progress bars
+  - Invoices View: Table layout with payment status indicators
+  - Assets View: Grid of downloadable files with icons and metadata
+  - Support View: Ticket list with status badges and priority indicators
+  - Settings View: Profile form with consistent input styling
+  - All views now use consistent dark theme (slate-900/50) with blue accents
+
+- **Admin Dashboard Improvements**:
+  - Fixed Modal component overflow with max-h-[90vh] and scrollable content area
+  - Added delete functionality to Careers page with dropdown menu (MoreVertical icon)
+  - Styled "Post New Job" form with Tailwind CSS, removed all inline styles
+  - Delete confirmation dialog before removing job postings
+  - Consistent button and input styling across all admin forms
+
 ### November 21, 2025 - Page Styling Fixes
 - **Fixed Unstyled Pages**:
   - Converted Privacy, Terms, Cookies, and Support pages from missing CSS files to Tailwind CSS
