@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Explicitly empty config to ensure Next.js detects this as the project root
+  // Allow all hosts for Replit proxy compatibility
+  experimental: {
+    allowedOrigins: ['*'],
+  },
 };
 
 module.exports = nextConfig;
