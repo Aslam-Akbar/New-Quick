@@ -48,8 +48,10 @@ const Content = () => {
               <span className="inline-block py-1 px-3 rounded-full bg-blue-500/10 text-blue-400 text-sm font-semibold mb-6 border border-blue-500/20">
                 Premium Software Agency
               </span>
-              <h1 className="text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight tracking-tight">
-                Engineering <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-violet-500">Digital Dominance.</span>
+              <h1 className="text-5xl lg:text-7xl font-bold mb-6 leading-tight tracking-tight">
+                <span className="text-white">Engineering</span>{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">Digital</span>{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-purple-600">Dominance.</span>
               </h1>
               <p className="text-xl text-slate-400 mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
                 We build scalable software, high-performance mobile apps, and data-driven growth engines for ambitious enterprises.
