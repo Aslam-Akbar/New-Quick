@@ -1,70 +1,219 @@
-# Getting Started with Create React App
+# Quick Tech Solutions - Premium Software Agency Website
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A full-stack Next.js application featuring a public marketing website, client portal, and admin dashboard for a software development agency.
 
-## Available Scripts
+## 🚀 Quick Start
 
-In the project directory, you can run:
+### Running the Application
 
-### `npm start`
+```bash
+npm install --legacy-peer-deps
+npm run dev
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+The application will be available at `http://localhost:5000`
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Test Credentials
 
-### `npm test`
+**Client Portal:**
+- Email: `test@example.com`
+- Password: `password123`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+**Admin Dashboard:**
+- Email: `admin@quicks.com`
+- Password: `admin123`
 
-### `npm run build`
+## 📋 Features
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Public Website
+- **Homepage** - Modern hero section with agency branding
+- **Services** - Comprehensive service offerings showcase
+- **About** - Company mission, values, and team statistics
+- **Careers** - Job listings with company benefits
+- **Process** - Agile development workflow visualization
+- **Contact** - Multi-channel contact information and form
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Client Portal (`/client-portal`)
+Secure dashboard for clients to:
+- View active projects and timelines
+- Track invoices and payment status
+- Download project assets and deliverables
+- Create and manage support tickets
+- Update profile and notification preferences
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Admin Dashboard (`/admin`)
+Comprehensive admin panel featuring:
+- Real-time statistics dashboard
+- Client management and profiles
+- Job posting creation and management
+- Invoice tracking and management
+- Support ticket monitoring
 
-### `npm run eject`
+## 🛠 Tech Stack
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- **Frontend**: Next.js 16, React 19
+- **Styling**: Tailwind CSS 4
+- **Database**: MySQL (TiDB Cloud)
+- **Icons**: React Icons, Lucide React
+- **Deployment**: Replit (Development), Autoscale (Production)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 📁 Project Structure
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```
+quick-tech-solutions/
+├── app/                      # Next.js app directory
+│   ├── admin/               # Admin dashboard routes
+│   │   ├── (protected)/     # Protected admin pages
+│   │   └── (public)/        # Public admin pages (login)
+│   ├── client-portal/       # Client dashboard
+│   ├── about/               # About page
+│   ├── careers/             # Careers page
+│   ├── contact/             # Contact page
+│   ├── services/            # Services page
+│   └── ...                  # Other public pages
+├── src/
+│   ├── actions/             # Server actions
+│   │   ├── auth.js          # Client authentication
+│   │   ├── admin-auth.js    # Admin authentication
+│   │   ├── portal.js        # Client portal actions
+│   │   └── admin-*.js       # Admin-specific actions
+│   ├── components/          # React components
+│   │   ├── admin/           # Admin-specific components
+│   │   ├── portal-views/    # Client portal views
+│   │   └── *.js             # Shared components
+│   ├── lib/
+│   │   └── db.js            # Database connection pool
+│   └── data/                # Mock data (if needed)
+├── public/                  # Static assets
+├── setup-dashboard-db.js    # Database setup script
+└── package.json
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 🗄 Database Schema
 
-## Learn More
+### Core Tables
+- **users** - Client user accounts
+- **admin_users** - Admin accounts
+- **client_profiles** - Extended client information
+- **projects** - Client projects with progress tracking
+- **project_timeline** - Project milestone events
+- **invoices** - Billing and payment records
+- **tickets** - Support ticket system
+- **ticket_replies** - Ticket conversation threads
+- **meetings** - Scheduled client meetings
+- **job_postings** - Career page listings
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Setup Database
+To initialize the database with sample data:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+node setup-dashboard-db.js
+```
 
-### Code Splitting
+## 🔒 Security Notes
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+⚠️ **This is a demonstration application** ⚠️
 
-### Analyzing the Bundle Size
+**Current implementation includes:**
+- Plain text passwords (NOT production-ready)
+- Hardcoded database credentials
+- Basic cookie-based authentication
+- No rate limiting
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+**For production use, implement:**
+- Password hashing (bcrypt, argon2)
+- Environment variables for secrets
+- JWT tokens or session management
+- HTTPS enforcement
+- Rate limiting on authentication
+- Input validation and sanitization
+- CSRF protection
+- Security headers
 
-### Making a Progressive Web App
+## 🎨 Design System
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Colors
+- **Primary**: Blue (#3b82f6)
+- **Dark**: Slate (#0f172a, #1e293b)
+- **Accent**: Violet, Emerald, Yellow
 
-### Advanced Configuration
+### Components
+- Modern glassmorphism effects
+- Smooth transitions and hover effects
+- Responsive grid layouts
+- Accessible form inputs
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## 📱 Responsive Design
 
-### Deployment
+Fully responsive design with breakpoints:
+- Mobile: < 768px
+- Tablet: 768px - 1024px
+- Desktop: > 1024px
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## 🧪 Testing
 
-### `npm run build` fails to minify
+See [TESTING_GUIDE.md](./TESTING_GUIDE.md) for comprehensive testing instructions.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Quick Test
+1. Navigate to `/login` and use client credentials
+2. Explore client portal features
+3. Navigate to `/admin/login` and use admin credentials
+4. Test admin dashboard functionality
+
+## 📝 Development
+
+### Scripts
+
+```bash
+npm run dev      # Start development server on port 5000
+npm run build    # Build for production
+npm start        # Start production server
+npm run lint     # Run ESLint
+```
+
+### Environment Configuration
+
+The application is configured for Replit:
+- Host: `0.0.0.0` (allows proxy access)
+- Port: `5000` (webview port)
+- Allowed origins: `*` (for development)
+
+## 🚢 Deployment
+
+Configured for Replit autoscale deployment:
+- Build: `npm run build`
+- Start: `npm start`
+- Auto-scaling based on traffic
+- Production-ready build optimization
+
+## 🐛 Known Issues
+
+1. Hydration warnings on login/contact pages (non-critical)
+2. Dependency peer conflicts resolved with `--legacy-peer-deps`
+3. Next.js 16 experimental features in use
+
+## 📚 Documentation
+
+- [TESTING_GUIDE.md](./TESTING_GUIDE.md) - Comprehensive testing guide
+- [replit.md](./replit.md) - Project configuration and memory
+
+## 🤝 Contributing
+
+This is a demonstration project. For production use:
+1. Implement proper security measures
+2. Add comprehensive error handling
+3. Set up logging and monitoring
+4. Add automated testing
+5. Configure CI/CD pipeline
+
+## 📄 License
+
+This is a demonstration project for educational purposes.
+
+## 🔗 Live Demo
+
+The application is running on Replit. Use the test credentials above to explore the features.
+
+---
+
+**Built with ❤️ using Next.js, React, and Tailwind CSS**
