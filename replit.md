@@ -66,6 +66,20 @@ The application connects to a pre-configured TiDB Cloud MySQL database. Connecti
 
 ## Recent Changes
 
+### November 21, 2025 - Page Styling Fixes
+- **Fixed Unstyled Pages**:
+  - Converted Privacy, Terms, Cookies, and Support pages from missing CSS files to Tailwind CSS
+  - Removed broken CSS imports (`./assets/css/style.css`, `./assets/css/pages.css`)
+  - Added Header and Footer components to all legal and support pages
+  - Applied consistent dark theme (slate-900) with blue accents matching the rest of the site
+  - All pages now properly styled and functional with no build errors
+
+- **Import Migration Completed**:
+  - Installed npm dependencies (removed react-helmet-async due to React 19 incompatibility)
+  - Restarted workflow successfully
+  - Verified all pages load and display correctly
+  - Client Portal and Admin pages confirmed to have proper styling
+
 ### November 21, 2025 - Full Project Review & Fixes
 - **Code Quality Improvements**:
   - Fixed duplicate console.error logging in src/lib/db.js
