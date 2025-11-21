@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+/* 
+  Legacy imports are commented out to start the migration. 
+*/
+
+/* @import "../src/assets/css/variables.css"; */
+/* @import "../src/assets/css/style.css"; */
+/* @import "../src/assets/css/header.css"; */
+/* @import "../src/assets/css/footer.css"; */
+/* @import "../src/assets/css/home.css"; */
+/* @import "../src/assets/css/pages.css"; */
+/* @import "../src/assets/css/dashboard.css"; */
+
+.main-content {
+  @apply min-h-[calc(100vh-300px)];
+}
