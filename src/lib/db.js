@@ -15,8 +15,8 @@ export const pool = mysql.createPool({
   },
   waitForConnections: true,
   connectionLimit: 10,
-  maxIdle: 10, // max idle connections, the default value is the same as `connectionLimit`
-  idleTimeout: 60000, // idle connections timeout, in milliseconds, the default value 60000
+  maxIdle: 10,
+  idleTimeout: 60000,
   queueLimit: 0,
   enableKeepAlive: true,
   keepAliveInitialDelay: 0
@@ -27,7 +27,6 @@ export async function query(sql, params) {
     const [results] = await pool.execute(sql, params);
     return results;
   } catch (error) {
-    console.error('Database Error:', error);
     console.error('Database Error:', error);
     throw new Error(`Database Error: ${error.message}`);
   }
