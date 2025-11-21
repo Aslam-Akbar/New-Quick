@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Allow all hosts for Replit proxy compatibility
+  // Allow all dev origins for Replit proxy compatibility
   experimental: {
-    allowedOrigins: ['*'],
+    allowedDevOrigins: ['*'],
   },
 };
 
