@@ -36,3 +36,13 @@ export async function toggleJobStatus(id, currentStatus) {
     return { success: false, error: 'Failed to update status' };
   }
 }
+
+export async function deleteJobPosting(id) {
+  try {
+    await query('DELETE FROM job_postings WHERE id = ?', [id]);
+    return { success: true };
+  } catch (error) {
+    console.error('Error deleting job:', error);
+    return { success: false, error: 'Failed to delete job posting' };
+  }
+}

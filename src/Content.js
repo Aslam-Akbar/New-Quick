@@ -49,7 +49,7 @@ const Content = () => {
                 Premium Software Agency
               </span>
               <h1 className="text-5xl lg:text-7xl font-bold mb-6 leading-tight tracking-tight">
-                <span className="text-white">Engineering</span>{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Engineering</span>{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">Digital</span>{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-purple-600">Dominance.</span>
               </h1>

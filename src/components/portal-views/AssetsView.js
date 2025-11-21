@@ -21,8 +21,8 @@ const AssetsView = ({ userEmail }) => {
 
   if (loading) {
     return (
-      <div className="view-loading">
-        <div className="spinner"></div>
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="w-12 h-12 border-4 border-blue-500/10 border-t-blue-500 rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -45,43 +45,42 @@ const AssetsView = ({ userEmail }) => {
   };
 
   return (
-    <div className="portal-view">
-      <div className="view-header">
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
         <div>
-          <h2>Assets & Files</h2>
-          <p className="view-subtitle">Access your project deliverables and resources.</p>
+          <h2 className="text-2xl font-bold text-white">Assets & Files</h2>
+          <p className="text-slate-400 mt-1">Access your project deliverables and resources.</p>
         </div>
       </div>
 
-      <div className="assets-grid">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {assets.map((asset) => (
-          <div key={asset.id} className="asset-card">
-            <div className="asset-card-header">
-              <div className="asset-icon-wrapper">
+          <div key={asset.id} className="bg-slate-800/50 border border-white/10 rounded-xl p-6 hover:bg-slate-800 transition-all hover:-translate-y-1 flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <div className="w-16 h-16 rounded-lg bg-white/5 flex items-center justify-center border border-white/10">
                 {getFileIcon(asset.type)}
               </div>
-              <button className="btn-icon-sm">
+              <button className="p-2 hover:bg-white/5 rounded-lg transition-colors text-slate-400 hover:text-white">
                 <MoreVertical size={16} />
               </button>
             </div>
             
-            <div className="asset-info">
-              <h4 className="asset-name" title={asset.name}>{asset.name}</h4>
-              <span className="asset-meta">{asset.type} • 2.4 MB</span>
+            <div className="flex flex-col gap-1">
+              <h4 className="text-white font-semibold truncate" title={asset.name}>{asset.name}</h4>
+              <span className="text-sm text-slate-400">{asset.type} • 2.4 MB</span>
             </div>
 
-            <button className="btn-download-block">
+            <button className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg font-semibold transition-colors shadow-lg hover:shadow-blue-500/20 w-full">
               <Download size={16} />
               <span>Download</span>
             </button>
           </div>
         ))}
         
-        {/* Empty State Placeholder if no assets */}
         {assets.length === 0 && (
-          <div className="empty-state-card">
-            <Package size={48} className="text-muted" />
-            <p>No assets available yet.</p>
+          <div className="col-span-full flex flex-col items-center justify-center py-16 bg-slate-800/30 rounded-xl border border-white/5">
+            <Package size={48} className="text-slate-600 mb-4" />
+            <p className="text-slate-500">No assets available yet.</p>
           </div>
         )}
       </div>

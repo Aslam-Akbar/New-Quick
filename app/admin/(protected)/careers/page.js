@@ -2,16 +2,33 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { getJobPostings, toggleJobStatus } from '../../../../src/actions/admin-careers';
-import { Plus, Briefcase, MapPin, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { getJobPostings, toggleJobStatus, deleteJobPosting } from '../../../../src/actions/admin-careers';
+import { Plus, Briefcase, MapPin, CheckCircle, XCircle, Trash2, MoreVertical } from 'lucide-react';
 
 export default function CareersPage() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [openDropdown, setOpenDropdown] = useState(null);
 
   useEffect(() => {
     fetchJobs();
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = () => {
+      if (openDropdown !== null) {
+        setOpenDropdown(null);
+      }
+    };
+    
+    if (openDropdown !== null) {
+      document.addEventListener('click', handleClickOutside);
+    }
+    
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [openDropdown]);
 
   const fetchJobs = async () => {
     const data = await getJobPostings();
@@ -21,7 +38,22 @@ export default function CareersPage() {
 
   const handleToggleStatus = async (id, status) => {
     await toggleJobStatus(id, status);
-    fetchJobs(); // Refresh list
+    fetchJobs();
+  };
+
+  const handleDeleteJob = async (id, title) => {
+    if (confirm(`Are you sure you want to delete "${title}"?`)) {
+      setOpenDropdown(null);
+      const result = await deleteJobPosting(id);
+      if (result.success) {
+        alert('Job posting deleted successfully!');
+        fetchJobs();
+      } else {
+        alert(result.error || 'Failed to delete job posting');
+      }
+    } else {
+      setOpenDropdown(null);
+    }
   };
 
   if (loading) {
@@ -88,17 +120,49 @@ export default function CareersPage() {
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    <button 
-                      className={`p-2 rounded-lg transition-colors ${
-                        job.status === 'active' 
-                          ? 'text-red-400 hover:bg-red-500/10 hover:text-red-300' 
-                          : 'text-emerald-400 hover:bg-emerald-500/10 hover:text-emerald-300'
-                      }`}
-                      onClick={() => handleToggleStatus(job.id, job.status)}
-                      title={job.status === 'active' ? 'Close Job' : 'Activate Job'}
-                    >
-                      {job.status === 'active' ? <XCircle size={20} /> : <CheckCircle size={20} />}
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button 
+                        className={`p-2 rounded-lg transition-colors ${
+                          job.status === 'active' 
+                            ? 'text-red-400 hover:bg-red-500/10 hover:text-red-300' 
+                            : 'text-emerald-400 hover:bg-emerald-500/10 hover:text-emerald-300'
+                        }`}
+                        onClick={() => handleToggleStatus(job.id, job.status)}
+                        title={job.status === 'active' ? 'Close Job' : 'Activate Job'}
+                      >
+                        {job.status === 'active' ? <XCircle size={20} /> : <CheckCircle size={20} />}
+                      </button>
+                      
+                      <div className="relative">
+                        <button 
+                          className="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                          onClick={(e) => { 
+                            e.stopPropagation(); 
+                            setOpenDropdown(openDropdown === job.id ? null : job.id);
+                          }}
+                        >
+                          <MoreVertical size={18} />
+                        </button>
+                        
+                        {openDropdown === job.id && (
+                          <div 
+                            className="absolute right-0 top-full mt-2 w-48 bg-slate-900 border border-white/10 rounded-lg shadow-xl z-50 overflow-hidden"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteJob(job.id, job.title);
+                              }}
+                              className="w-full flex items-center gap-2 px-4 py-3 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors text-left"
+                            >
+                              <Trash2 size={14} />
+                              Delete Job Posting
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </td>
                 </tr>
               ))}
