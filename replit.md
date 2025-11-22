@@ -5,7 +5,7 @@ This is a Next.js web application for Quick Tech Solutions, a premium software d
 
 **Project Type**: Next.js Frontend Application  
 **Tech Stack**: Next.js 16, React 19, Tailwind CSS, MySQL (TiDB Cloud)  
-**Last Updated**: November 21, 2025
+**Last Updated**: November 22, 2025
 
 ## Purpose
 - Showcase agency services (software development, mobile apps, cloud infrastructure, etc.)
@@ -16,17 +16,17 @@ This is a Next.js web application for Quick Tech Solutions, a premium software d
 ## Project Architecture
 
 ### Directory Structure
-- `/app` - Next.js app directory with route pages
-  - `/admin` - Admin dashboard (protected and public routes)
-  - `/client-portal` - Client dashboard
-  - `/careers`, `/about`, `/contact`, etc. - Public pages
-- `/src` - Source code
+- `/app` - Next.js app directory (all source code)
   - `/actions` - Server actions for data operations
   - `/components` - React components
   - `/lib` - Database connection utilities
   - `/data` - Mock data for development
+  - `/utils` - Utility functions
+  - `/admin` - Admin dashboard (protected and public routes)
+  - `/client-portal` - Client dashboard
+  - `/careers`, `/about`, `/contact`, etc. - Public pages
 - `/public` - Static assets
-- `/build` - Legacy build artifacts (from CRA migration)
+- `/scripts` - Database setup and utility scripts
 
 ### Key Features
 1. **Public Website**: Services, About, Contact, Careers pages
@@ -44,9 +44,9 @@ This is a Next.js web application for Quick Tech Solutions, a premium software d
 
 ### Database
 - **Type**: MySQL (TiDB Cloud hosted)
-- **Connection**: Via mysql2 pool in `src/lib/db.js`
+- **Connection**: Via mysql2 pool in `app/lib/db.js`
 - **Tables**: users, client_profiles, projects, invoices, tickets, meetings, job_postings, admin_users
-- **Setup Script**: `setup-dashboard-db.js` (creates schema and seeds data)
+- **Setup Script**: `scripts/setup-dashboard-db.js` (creates schema and seeds data)
 
 ## Development Setup
 
@@ -62,9 +62,22 @@ The application runs on http://0.0.0.0:5000 (configured for Replit environment)
 - **Next.js Config**: Configured with `allowedDevOrigins: ['*']` for Replit compatibility
 
 ### Database Setup
-The application connects to a pre-configured TiDB Cloud MySQL database. Connection details are in `src/lib/db.js`.
+The application connects to a pre-configured TiDB Cloud MySQL database. Connection details are in `app/lib/db.js`.
 
 ## Recent Changes
+
+### November 22, 2025 - Complete Project Structure Migration
+- **src to app Directory Consolidation**:
+  - Migrated all shared folders (actions, components, data, lib, utils) from `src/` to `app/`
+  - Recovered deleted component files from git history (Content.js, About.js, Services.js, etc.)
+  - Fixed all import paths across the entire codebase to reflect new structure
+  - Admin routes now use correct relative path depths based on nesting level:
+    - 2 levels (layout/dashboard): `../../actions/`
+    - 3 levels (clients/careers list): `../../../actions/`
+    - 4 levels (clients/[id], careers/new): `../../../../actions/`
+  - Updated scripts folder to reference `../app/*` modules
+  - Verified production-ready: all routes compile and run without errors
+  - Eliminated confusion from dual directory structures (old CRA src + Next.js app)
 
 ### November 21, 2025 - UI/UX Enhancements
 - **Home Page Hero Text**:
