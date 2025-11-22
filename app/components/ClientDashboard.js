@@ -17,7 +17,9 @@ import {
   File,
   LifeBuoy,
   ChevronRight,
-  Bell
+  Bell,
+  Globe,
+  Github
 } from 'lucide-react';
 // import '../assets/css/dashboard.css'; // Removed
 // import '../assets/css/portal-views.css'; // Removed - assuming we will fix sub-views later or they inherit
