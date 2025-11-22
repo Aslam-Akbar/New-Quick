@@ -28,6 +28,8 @@ import InvoicesView from './portal-views/InvoicesView';
 
 import SupportView from './portal-views/SupportView';
 import SettingsView from './portal-views/SettingsView';
+import LiveSiteView from './portal-views/LiveSiteView';
+import GitHubView from './portal-views/GitHubView';
 
 const ClientDashboard = ({ userEmail }) => {
   const [data, setData] = useState(null);
@@ -98,7 +100,8 @@ const ClientDashboard = ({ userEmail }) => {
             { id: 'dashboard', icon: LayoutDashboard, label: 'Overview' },
             { id: 'projects', icon: FolderKanban, label: 'My Projects' },
             { id: 'invoices', icon: FileText, label: 'Invoices' },
-
+            { id: 'livesite', icon: Globe, label: 'Live Website' },
+            { id: 'github', icon: Github, label: 'Source Code' },
             { id: 'support', icon: LifeBuoy, label: 'Support' },
             { id: 'settings', icon: Settings, label: 'Settings' }
           ].map((item) => (
@@ -157,7 +160,8 @@ const ClientDashboard = ({ userEmail }) => {
         <div className="dashboard-content">
           {activeView === 'projects' && <ProjectsView userEmail={userEmail} />}
           {activeView === 'invoices' && <InvoicesView userEmail={userEmail} />}
-
+          {activeView === 'livesite' && <LiveSiteView userEmail={userEmail} />}
+          {activeView === 'github' && <GitHubView userEmail={userEmail} />}
           {activeView === 'support' && <SupportView userEmail={userEmail} />}
           {activeView === 'settings' && <SettingsView userEmail={userEmail} />}
           

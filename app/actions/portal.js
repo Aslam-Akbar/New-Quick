@@ -127,3 +127,56 @@ export async function updateNotificationPreferences(email, preferences) {
     return { success: false, message: 'Failed to update preferences' };
   }
 }
+
+
+export async function getProjectLinks(email) {
+  try {
+    const userId = await getUserId(email);
+    if (!userId) return { success: false, message: 'User not found' };
+
+    const projects = await query(
+      'SELECT title, github_url, hosted_url, updated_at FROM projects WHERE user_id = ? ORDER BY updated_at DESC LIMIT 1',
+      [userId]
+    );
+
+    if (projects.length === 0) {
+      return {
+        success: true,
+        data: {
+          projectName: 'Your Project',
+          githubUrl: null,
+          hostedUrl: null,
+          lastUpdated: null,
+          lastCommit: null,
+          defaultBranch: 'main',
+          isPrivate: true,
+          updateHistory: []
+        }
+      };
+    }
+
+    const project = projects[0];
+    
+    return {
+      success: true,
+      data: {
+        projectName: project.title,
+        githubUrl: project.github_url,
+        hostedUrl: project.hosted_url,
+        lastUpdated: project.updated_at,
+        lastCommit: project.updated_at,
+        defaultBranch: 'main',
+        isPrivate: true,
+        updateHistory: [
+          {
+            message: 'Initial project setup and deployment',
+            date: project.updated_at
+          }
+        ]
+      }
+    };
+  } catch (error) {
+    console.error('getProjectLinks Error:', error);
+    return { success: false, message: 'Failed to fetch project links' };
+  }
+}
