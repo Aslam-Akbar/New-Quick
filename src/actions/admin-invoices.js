@@ -32,8 +32,10 @@ export async function getClientInvoices(clientId) {
  */
 export async function createInvoice(clientId, data) {
   try {
+    console.log('createInvoice called for client:', clientId, 'Data:', data);
     // Input Validation
     if (!data.amount || !data.date || !data.due_date) {
+      console.error('Missing required fields in createInvoice');
       return { success: false, error: 'Missing required fields' };
     }
 
@@ -44,13 +46,15 @@ export async function createInvoice(clientId, data) {
     );
     
     if (!clientData || clientData.length === 0) {
+        console.error('Client not found in createInvoice');
         return { success: false, error: 'Client not found' };
     }
     
     const userId = clientData[0].user_id;
+    console.log('Found userId:', userId);
 
     // 2. Insert Data
-    await query(
+    const result = await query(
       `INSERT INTO invoices 
       (user_id, amount, currency, status, date, due_date, description) 
       VALUES (?, ?, ?, ?, ?, ?, ?)`, 
@@ -64,9 +68,14 @@ export async function createInvoice(clientId, data) {
         data.description || '' 
       ]
     );
+    console.log('Invoice inserted, result:', result);
 
     // 3. Revalidate Cache
-    revalidatePath(`/clients/${clientId}`); 
+    try {
+        revalidatePath(`/clients/${clientId}`); 
+    } catch (e) {
+        console.warn('revalidatePath failed (expected in script):', e);
+    }
     
     return { success: true };
   } catch (error) {

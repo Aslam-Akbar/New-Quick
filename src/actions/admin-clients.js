@@ -74,10 +74,30 @@ export async function deleteClient(clientId) {
 
     const userId = clients[0].user_id;
 
-    // Delete client profile first (foreign key constraint)
+    // Delete related data first (Cascade manually if foreign keys don't cascade)
+    // 1. Delete Projects & Timeline
+    const projects = await query('SELECT id FROM projects WHERE user_id = ?', [userId]);
+    for (const project of projects) {
+        await query('DELETE FROM project_timeline WHERE project_id = ?', [project.id]);
+    }
+    await query('DELETE FROM projects WHERE user_id = ?', [userId]);
+
+    // 2. Delete Invoices
+    await query('DELETE FROM invoices WHERE user_id = ?', [userId]);
+
+    // 3. Delete Tickets
+    await query('DELETE FROM tickets WHERE user_id = ?', [userId]);
+
+    // 4. Delete Meetings
+    await query('DELETE FROM meetings WHERE user_id = ?', [userId]);
+
+    // 5. Delete Recent Files
+    await query('DELETE FROM recent_files WHERE user_id = ?', [userId]);
+
+    // 6. Delete client profile
     await query('DELETE FROM client_profiles WHERE id = ?', [clientId]);
 
-    // Delete associated user account
+    // 7. Delete associated user account
     await query('DELETE FROM users WHERE id = ?', [userId]);
 
     return { success: true, message: 'Client deleted successfully' };

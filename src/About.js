@@ -45,12 +45,13 @@ const About = () => {
           </div>
           
           <div className="relative max-w-lg mx-auto lg:max-w-none w-full aspect-[4/3]">
-            <div className="absolute -top-5 -left-5 w-full h-full border-2 border-blue-500 rounded-2xl z-0 hidden md:block"></div>
+            <div className="absolute top-0 left-0 md:-top-5 md:-left-5 w-full h-full border-2 border-blue-500 rounded-2xl z-0 block">
             <img 
               src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
               alt="Team collaboration" 
               className="w-full h-full object-cover rounded-2xl relative z-10 shadow-2xl"
             />
+            </div>
           </div>
         </div>
       </div>

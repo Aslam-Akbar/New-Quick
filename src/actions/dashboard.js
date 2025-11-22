@@ -55,6 +55,7 @@ export async function getDashboardData(email) {
         title: project.title,
         progress: project.progress,
         status: project.status,
+        live_link: project.live_link,
         timeline: timeline
       };
     }

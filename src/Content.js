@@ -81,10 +81,10 @@ const Content = () => {
                     <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
                     <div className="w-3 h-3 rounded-full bg-green-500"></div>
                   </div>
-                  <span style={{color: '#c678dd'}}>const</span> <span style={{color: '#e5c07b'}}>Dominance</span> = <span style={{color: '#c678dd'}}>new</span> <span style={{color: '#e5c07b'}}>DigitalFuture</span>();<br/>
+                  <span style={{color: '#c678dd'}}>const</span> <span style={{color: '#e5c07b'}}>Dominance</span> <span style={{color: '#ffffff'}}>=</span> <span style={{color: '#c678dd'}}>new</span> <span style={{color: '#e5c07b'}}>DigitalFuture</span><span style={{color: '#ffffff'}}>()</span><span style={{color: '#ffffff'}}>;</span><br/>
                   <br/>
-                  <span style={{color: '#e06c75'}}>Dominance</span>.<span style={{color: '#61afef'}}>scale</span>(<span style={{color: '#d19a66'}}>1000</span>);<br/>
-                  <span style={{color: '#e06c75'}}>Dominance</span>.<span style={{color: '#61afef'}}>optimize</span>(<span style={{color: '#98c379'}}>'Revenue'</span>);<br/>
+                  <span style={{color: '#e06c75'}}>Dominance</span><span style={{color: '#ffffff'}}>.</span><span style={{color: '#61afef'}}>scale</span><span style={{color: '#ffffff'}}>(</span><span style={{color: '#d19a66'}}>1000</span><span style={{color: '#ffffff'}}>)</span><span style={{color: '#ffffff'}}>;</span><br/>
+                  <span style={{color: '#e06c75'}}>Dominance</span><span style={{color: '#ffffff'}}>.</span><span style={{color: '#61afef'}}>optimize</span><span style={{color: '#ffffff'}}>(</span><span style={{color: '#98c379'}}>'Revenue'</span><span style={{color: '#ffffff'}}>)</span><span style={{color: '#ffffff'}}>;</span><br/>
                   <br/>
                   <span style={{color: '#abb2bf'}}>{'// Engineered for growth'}</span>
                 </div>
