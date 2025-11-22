@@ -10,7 +10,7 @@ import Modal from "../../../../components/admin/Modal";
 import {
   Building, Mail, Phone, MapPin, Calendar,
   Briefcase, FileText, MessageSquare, ArrowLeft, Plus,
-  CheckCircle, Clock, AlertCircle, MoreVertical, Search, Filter, Edit2, Trash2
+  CheckCircle, Clock, AlertCircle, MoreVertical, Search, Filter, Edit2, Trash2, Globe, Github
 } from 'lucide-react';
 
 export default function ClientDetailsPage() {
@@ -26,15 +26,22 @@ export default function ClientDetailsPage() {
   const [activeTab, setActiveTab] = useState('projects');
   const [activeDropdown, setActiveDropdown] = useState(null);
 
-  // Modals
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
-  const [newProject, setNewProject] = useState({ name: '', status: 'Pending', progress: 0, due_date: '', advanceAmount: '', live_link: '' });
+  const [newProject, setNewProject] = useState({ 
+    name: '', 
+    status: 'Pending', 
+    progress: 0, 
+    due_date: '', 
+    advanceAmount: '', 
+    hosted_url: '', 
+    github_url: '', 
+    next_meeting: '' 
+  });
   const [editingProject, setEditingProject] = useState(null);
 
   const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false);
   const [newInvoice, setNewInvoice] = useState({ amount: '', currency: 'INR', status: 'Unpaid', date: '', due_date: '' });
 
-  // --- DATA FETCHING ---
   const refreshData = async () => {
     if (!params.id) return;
     const [pData, iData, tData] = await Promise.all([
@@ -65,20 +72,62 @@ export default function ClientDetailsPage() {
     initFetch();
   }, [params.id]);
 
-  // --- ACTION HANDLERS ---
+  const formatDateTimeForInput = (dateStr) => {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    const offsetMs = date.getTimezoneOffset() * 60000;
+    const localDate = new Date(date.getTime() - offsetMs);
+    return localDate.toISOString().slice(0, 16);
+  };
+
+  const validateURL = (url) => {
+    if (!url) return true;
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  };
 
   const handleCreateProject = (e) => {
     e.preventDefault();
+    
+    if (newProject.progress < 0 || newProject.progress > 100) {
+      alert('Progress must be between 0 and 100');
+      return;
+    }
+    
+    if (newProject.hosted_url && !validateURL(newProject.hosted_url)) {
+      alert('Please enter a valid Live Website URL');
+      return;
+    }
+    
+    if (newProject.github_url && !validateURL(newProject.github_url)) {
+      alert('Please enter a valid GitHub URL');
+      return;
+    }
+    
     startTransition(async () => {
       const payload = { 
         ...newProject, 
         progress: Number(newProject.progress),
-        advanceAmount: Number(newProject.advanceAmount)
+        advanceAmount: Number(newProject.advanceAmount),
+        next_meeting: newProject.next_meeting || null
       };
       const result = await createProject(params.id, payload);
       if (result?.success) {
         setIsProjectModalOpen(false);
-        setNewProject({ name: '', status: 'Pending', progress: 0, due_date: '', advanceAmount: '', live_link: '' });
+        setNewProject({ 
+          name: '', 
+          status: 'Pending', 
+          progress: 0, 
+          due_date: '', 
+          advanceAmount: '', 
+          hosted_url: '', 
+          github_url: '', 
+          next_meeting: '' 
+        });
         await refreshData();
       } else {
         alert('Error: ' + (result?.error || 'Failed'));
@@ -89,8 +138,27 @@ export default function ClientDetailsPage() {
   const handleUpdateProject = (e) => {
     e.preventDefault();
     if (!editingProject) return;
+    
+    if (editingProject.progress < 0 || editingProject.progress > 100) {
+      alert('Progress must be between 0 and 100');
+      return;
+    }
+    
+    if (editingProject.hosted_url && !validateURL(editingProject.hosted_url)) {
+      alert('Please enter a valid Live Website URL');
+      return;
+    }
+    
+    if (editingProject.github_url && !validateURL(editingProject.github_url)) {
+      alert('Please enter a valid GitHub URL');
+      return;
+    }
+    
     startTransition(async () => {
-        const result = await updateProject(editingProject.id, editingProject);
+        const result = await updateProject(editingProject.id, {
+          ...editingProject,
+          next_meeting: editingProject.next_meeting || null
+        });
         if (result?.success) {
             setIsProjectModalOpen(false);
             setEditingProject(null);
@@ -158,8 +226,6 @@ export default function ClientDetailsPage() {
       else alert('Failed to close ticket');
     });
   };
-
-  // --- UI HELPERS ---
 
   useEffect(() => {
     const close = () => setActiveDropdown(null);
@@ -253,6 +319,9 @@ export default function ClientDetailsPage() {
                        <th className="p-4">Name</th>
                        <th className="p-4">Status</th>
                        <th className="p-4">Progress</th>
+                       <th className="p-4">Due Date</th>
+                       <th className="p-4">Next Meeting</th>
+                       <th className="p-4">Links</th>
                        <th className="p-4 text-right">Actions</th>
                      </tr>
                    </thead>
@@ -273,12 +342,29 @@ export default function ClientDetailsPage() {
                             </select>
                          </td>
                          <td className="p-4">{p.progress}%</td>
+                         <td className="p-4">{p.due_date || '-'}</td>
+                         <td className="p-4">{p.next_meeting ? new Date(p.next_meeting).toLocaleDateString() : '-'}</td>
+                         <td className="p-4">
+                           <div className="flex gap-2">
+                             {p.hosted_url && (
+                               <a href={p.hosted_url} target="_blank" rel="noopener noreferrer" className="p-1.5 bg-blue-600/20 hover:bg-blue-600/30 rounded text-blue-400" title="Live Website">
+                                 <Globe size={14} />
+                               </a>
+                             )}
+                             {p.github_url && (
+                               <a href={p.github_url} target="_blank" rel="noopener noreferrer" className="p-1.5 bg-purple-600/20 hover:bg-purple-600/30 rounded text-purple-400" title="Source Code">
+                                 <Github size={14} />
+                               </a>
+                             )}
+                             {!p.hosted_url && !p.github_url && '-'}
+                           </div>
+                         </td>
                          <td className="p-4 text-right relative">
                            <button onClick={(e) => toggleDropdown(e, 'project', p.id)} className="p-2 hover:bg-white/10 rounded"><MoreVertical size={16}/></button>
                          </td>
                        </tr>
                      ))}
-                     {projects.length === 0 && <tr><td colSpan="4" className="p-8 text-center">No projects found.</td></tr>}
+                     {projects.length === 0 && <tr><td colSpan="7" className="p-8 text-center">No projects found.</td></tr>}
                    </tbody>
                  </table>
                </div>
@@ -356,7 +442,15 @@ export default function ClientDetailsPage() {
         >
            {activeDropdown.type === 'project' && (
               <>
-                <button onClick={() => { setEditingProject(projects.find(p => p.id === activeDropdown.id)); setIsProjectModalOpen(true); setActiveDropdown(null); }} className="w-full text-left px-4 py-2 text-sm text-blue-400 hover:bg-white/5 flex items-center gap-2">
+                <button onClick={() => { 
+                  const project = projects.find(p => p.id === activeDropdown.id);
+                  setEditingProject({
+                    ...project,
+                    next_meeting: formatDateTimeForInput(project.next_meeting)
+                  });
+                  setIsProjectModalOpen(true); 
+                  setActiveDropdown(null); 
+                }} className="w-full text-left px-4 py-2 text-sm text-blue-400 hover:bg-white/5 flex items-center gap-2">
                     <Edit2 size={14}/> Edit
                 </button>
                 <button onClick={() => { handleDeleteProject(activeDropdown.id); setActiveDropdown(null); }} className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-white/5 flex items-center gap-2">
@@ -379,13 +473,87 @@ export default function ClientDetailsPage() {
 
       <Modal isOpen={isProjectModalOpen} onClose={() => { setIsProjectModalOpen(false); setEditingProject(null); }} title={editingProject ? "Edit Project" : "New Project"}>
          <form onSubmit={editingProject ? handleUpdateProject : handleCreateProject} className="space-y-4">
-            <input placeholder="Name" className="w-full bg-slate-900 p-2 border border-white/10 rounded text-white" value={editingProject ? editingProject.name : newProject.name} onChange={e => editingProject ? setEditingProject({...editingProject, name: e.target.value}) : setNewProject({...newProject, name: e.target.value})} required />
+            <input 
+              placeholder="Project Name" 
+              className="w-full bg-slate-900 p-2 border border-white/10 rounded text-white" 
+              value={editingProject ? editingProject.name : newProject.name} 
+              onChange={e => editingProject ? setEditingProject({...editingProject, name: e.target.value}) : setNewProject({...newProject, name: e.target.value})} 
+              required 
+            />
+            
             <div className="grid grid-cols-2 gap-4">
-                <input type="date" className="w-full bg-slate-900 p-2 border border-white/10 rounded text-white" value={editingProject ? editingProject.due_date : newProject.due_date} onChange={e => editingProject ? setEditingProject({...editingProject, due_date: e.target.value}) : setNewProject({...newProject, due_date: e.target.value})} required />
-                {!editingProject && <input type="number" placeholder="Advance Amount" className="w-full bg-slate-900 p-2 border border-white/10 rounded text-white" value={newProject.advanceAmount} onChange={e => setNewProject({...newProject, advanceAmount: e.target.value})} />}
+                <div>
+                  <label className="block text-xs text-gray-400 mb-1">Progress (%)</label>
+                  <input 
+                    type="number" 
+                    min="0" 
+                    max="100" 
+                    placeholder="0" 
+                    className="w-full bg-slate-900 p-2 border border-white/10 rounded text-white" 
+                    value={editingProject ? editingProject.progress : newProject.progress} 
+                    onChange={e => editingProject ? setEditingProject({...editingProject, progress: e.target.value}) : setNewProject({...newProject, progress: e.target.value})} 
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-400 mb-1">Due Date</label>
+                  <input 
+                    type="date" 
+                    className="w-full bg-slate-900 p-2 border border-white/10 rounded text-white" 
+                    value={editingProject ? editingProject.due_date : newProject.due_date} 
+                    onChange={e => editingProject ? setEditingProject({...editingProject, due_date: e.target.value}) : setNewProject({...newProject, due_date: e.target.value})} 
+                    required 
+                  />
+                </div>
             </div>
-            <input placeholder="Live Project Link (https://...)" className="w-full bg-slate-900 p-2 border border-white/10 rounded text-white" value={editingProject ? (editingProject.live_link || '') : newProject.live_link} onChange={e => editingProject ? setEditingProject({...editingProject, live_link: e.target.value}) : setNewProject({...newProject, live_link: e.target.value})} />
-            <button disabled={isPending} className="w-full bg-blue-600 text-white p-2 rounded">{isPending ? 'Saving...' : (editingProject ? 'Update' : 'Create')}</button>
+            
+            <div>
+              <label className="block text-xs text-gray-400 mb-1">Next Meeting</label>
+              <input 
+                type="datetime-local" 
+                className="w-full bg-slate-900 p-2 border border-white/10 rounded text-white" 
+                value={editingProject ? editingProject.next_meeting : newProject.next_meeting} 
+                onChange={e => editingProject ? setEditingProject({...editingProject, next_meeting: e.target.value}) : setNewProject({...newProject, next_meeting: e.target.value})} 
+              />
+            </div>
+            
+            <div>
+              <label className="block text-xs text-gray-400 mb-1">Live Website URL</label>
+              <input 
+                type="url"
+                placeholder="https://example.com" 
+                className="w-full bg-slate-900 p-2 border border-white/10 rounded text-white" 
+                value={editingProject ? (editingProject.hosted_url || '') : newProject.hosted_url} 
+                onChange={e => editingProject ? setEditingProject({...editingProject, hosted_url: e.target.value}) : setNewProject({...newProject, hosted_url: e.target.value})} 
+              />
+            </div>
+            
+            <div>
+              <label className="block text-xs text-gray-400 mb-1">GitHub Repository URL</label>
+              <input 
+                type="url"
+                placeholder="https://github.com/username/repo" 
+                className="w-full bg-slate-900 p-2 border border-white/10 rounded text-white" 
+                value={editingProject ? (editingProject.github_url || '') : newProject.github_url} 
+                onChange={e => editingProject ? setEditingProject({...editingProject, github_url: e.target.value}) : setNewProject({...newProject, github_url: e.target.value})} 
+              />
+            </div>
+            
+            {!editingProject && (
+              <div>
+                <label className="block text-xs text-gray-400 mb-1">Advance Amount (Optional)</label>
+                <input 
+                  type="number" 
+                  placeholder="0" 
+                  className="w-full bg-slate-900 p-2 border border-white/10 rounded text-white" 
+                  value={newProject.advanceAmount} 
+                  onChange={e => setNewProject({...newProject, advanceAmount: e.target.value})} 
+                />
+              </div>
+            )}
+            
+            <button disabled={isPending} className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-500">
+              {isPending ? 'Saving...' : (editingProject ? 'Update Project' : 'Create Project')}
+            </button>
          </form>
       </Modal>
 
