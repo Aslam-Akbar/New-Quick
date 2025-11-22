@@ -2,9 +2,8 @@
 
 import React, { useEffect, useMemo, useState, useTransition } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-// Ensure these paths match your folder structure exactly
 import { getClientById } from '../../../../../src/actions/admin-clients';
-import { getClientProjects, createProject, deleteProject } from '../../../../../src/actions/admin-projects';
+import { getClientProjects, createProject, deleteProject, updateProject } from '../../../../../src/actions/admin-projects';
 import { getClientInvoices, createInvoice, deleteInvoice, markInvoicePaid } from '../../../../../src/actions/admin-invoices';
 import { getClientTickets, closeTicket } from '../../../../../src/actions/admin-tickets';
 import Modal from '../../../../../src/components/admin/Modal';
@@ -17,7 +16,7 @@ import {
 export default function ClientDetailsPage() {
   const params = useParams();
   const router = useRouter();
-  const [isPending, startTransition] = useTransition(); // Handles loading states for actions
+  const [isPending, startTransition] = useTransition();
 
   const [client, setClient] = useState(null);
   const [projects, setProjects] = useState([]);
@@ -29,7 +28,8 @@ export default function ClientDetailsPage() {
 
   // Modals
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
-  const [newProject, setNewProject] = useState({ name: '', status: 'Pending', progress: 0, due_date: '' });
+  const [newProject, setNewProject] = useState({ name: '', status: 'Pending', progress: 0, due_date: '', advanceAmount: '', live_link: '' });
+  const [editingProject, setEditingProject] = useState(null);
 
   const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false);
   const [newInvoice, setNewInvoice] = useState({ amount: '', currency: 'INR', status: 'Unpaid', date: '', due_date: '' });
@@ -37,7 +37,6 @@ export default function ClientDetailsPage() {
   // --- DATA FETCHING ---
   const refreshData = async () => {
     if (!params.id) return;
-    // We fetch specific lists to ensure local state is in sync
     const [pData, iData, tData] = await Promise.all([
       getClientProjects(params.id),
       getClientInvoices(params.id),
@@ -46,7 +45,7 @@ export default function ClientDetailsPage() {
     setProjects(pData || []);
     setInvoices(iData || []);
     setTickets(tData || []);
-    router.refresh(); // Forces Next.js server components to refresh too
+    router.refresh();
   };
 
   useEffect(() => {
@@ -71,15 +70,42 @@ export default function ClientDetailsPage() {
   const handleCreateProject = (e) => {
     e.preventDefault();
     startTransition(async () => {
-      const payload = { ...newProject, progress: Number(newProject.progress) };
+      const payload = { 
+        ...newProject, 
+        progress: Number(newProject.progress),
+        advanceAmount: Number(newProject.advanceAmount)
+      };
       const result = await createProject(params.id, payload);
       if (result?.success) {
         setIsProjectModalOpen(false);
-        setNewProject({ name: '', status: 'Pending', progress: 0, due_date: '' });
+        setNewProject({ name: '', status: 'Pending', progress: 0, due_date: '', advanceAmount: '', live_link: '' });
         await refreshData();
       } else {
         alert('Error: ' + (result?.error || 'Failed'));
       }
+    });
+  };
+
+  const handleUpdateProject = (e) => {
+    e.preventDefault();
+    if (!editingProject) return;
+    startTransition(async () => {
+        const result = await updateProject(editingProject.id, editingProject);
+        if (result?.success) {
+            setIsProjectModalOpen(false);
+            setEditingProject(null);
+            await refreshData();
+        } else {
+            alert('Error: ' + (result?.error || 'Failed'));
+        }
+    });
+  };
+
+  const handleUpdateProjectStatus = (projectId, newStatus) => {
+    startTransition(async () => {
+        const result = await updateProject(projectId, { status: newStatus });
+        if (result?.success) await refreshData();
+        else alert('Failed to update status');
     });
   };
 
@@ -135,7 +161,6 @@ export default function ClientDetailsPage() {
 
   // --- UI HELPERS ---
 
-  // Close dropdowns on click outside
   useEffect(() => {
     const close = () => setActiveDropdown(null);
     window.addEventListener('click', close);
@@ -143,7 +168,7 @@ export default function ClientDetailsPage() {
   }, []);
 
   const toggleDropdown = (e, type, id) => {
-    e.stopPropagation(); // Stop bubbling
+    e.stopPropagation();
     if (activeDropdown?.type === type && activeDropdown?.id === id) {
       setActiveDropdown(null);
     } else {
@@ -177,7 +202,6 @@ export default function ClientDetailsPage() {
 
   return (
     <div className={`animate-in fade-in duration-500 relative ${isPending ? 'opacity-70 pointer-events-none' : ''}`}>
-      {/* Header & Tabs */}
       <header className="mb-6">
         <div className="flex justify-between items-start">
           <div>
@@ -208,9 +232,7 @@ export default function ClientDetailsPage() {
         </div>
       </header>
 
-      {/* MAIN CONTENT */}
       <main className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Sidebar Info */}
         <aside className="lg:col-span-4 space-y-6">
           <div className="bg-slate-800/50 border border-white/10 rounded-2xl p-6 text-white">
             <h3 className="font-bold mb-4 text-lg">Contact Details</h3>
@@ -222,9 +244,7 @@ export default function ClientDetailsPage() {
           </div>
         </aside>
 
-        {/* Tab Content */}
         <div className="lg:col-span-8">
-            {/* PROJECTS TAB */}
             {activeTab === 'projects' && (
                <div className="bg-slate-800/50 border border-white/10 rounded-2xl overflow-hidden">
                  <table className="w-full text-left text-sm text-gray-400">
@@ -240,7 +260,18 @@ export default function ClientDetailsPage() {
                      {projects.map(p => (
                        <tr key={p.id} className="hover:bg-white/5">
                          <td className="p-4 text-white font-medium">{p.name}</td>
-                         <td className="p-4">{p.status}</td>
+                         <td className="p-4">
+                            <select 
+                                value={p.status}
+                                onChange={(e) => handleUpdateProjectStatus(p.id, e.target.value)}
+                                className="bg-slate-900 border border-white/10 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-blue-500"
+                            >
+                                <option value="Pending">Pending</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                                <option value="On Hold">On Hold</option>
+                            </select>
+                         </td>
                          <td className="p-4">{p.progress}%</td>
                          <td className="p-4 text-right relative">
                            <button onClick={(e) => toggleDropdown(e, 'project', p.id)} className="p-2 hover:bg-white/10 rounded"><MoreVertical size={16}/></button>
@@ -253,7 +284,6 @@ export default function ClientDetailsPage() {
                </div>
             )}
 
-            {/* INVOICES TAB */}
             {activeTab === 'invoices' && (
                <div className="bg-slate-800/50 border border-white/10 rounded-2xl overflow-hidden">
                  <table className="w-full text-left text-sm text-gray-400">
@@ -286,7 +316,6 @@ export default function ClientDetailsPage() {
                </div>
             )}
 
-            {/* TICKETS TAB */}
             {activeTab === 'tickets' && (
                <div className="bg-slate-800/50 border border-white/10 rounded-2xl overflow-hidden">
                  <table className="w-full text-left text-sm text-gray-400">
@@ -319,17 +348,21 @@ export default function ClientDetailsPage() {
         </div>
       </main>
 
-      {/* DROPDOWN MENU */}
       {activeDropdown && (
         <div 
           className="fixed z-50 bg-slate-900 border border-white/10 rounded shadow-xl w-40"
           style={{ top: activeDropdown.position.top, right: activeDropdown.position.right }}
-          onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside menu
+          onClick={(e) => e.stopPropagation()}
         >
            {activeDropdown.type === 'project' && (
-              <button onClick={() => { handleDeleteProject(activeDropdown.id); setActiveDropdown(null); }} className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-white/5 flex items-center gap-2">
-                <Trash2 size={14}/> Delete
-              </button>
+              <>
+                <button onClick={() => { setEditingProject(projects.find(p => p.id === activeDropdown.id)); setIsProjectModalOpen(true); setActiveDropdown(null); }} className="w-full text-left px-4 py-2 text-sm text-blue-400 hover:bg-white/5 flex items-center gap-2">
+                    <Edit2 size={14}/> Edit
+                </button>
+                <button onClick={() => { handleDeleteProject(activeDropdown.id); setActiveDropdown(null); }} className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-white/5 flex items-center gap-2">
+                    <Trash2 size={14}/> Delete
+                </button>
+              </>
            )}
            {activeDropdown.type === 'invoice' && (
               <>
@@ -344,12 +377,15 @@ export default function ClientDetailsPage() {
         </div>
       )}
 
-      {/* Include your Modals here (ProjectModal, InvoiceModal) with the existing code you have */}
-      <Modal isOpen={isProjectModalOpen} onClose={() => setIsProjectModalOpen(false)} title="New Project">
-         <form onSubmit={handleCreateProject} className="space-y-4">
-            <input placeholder="Name" className="w-full bg-slate-900 p-2 border border-white/10 rounded text-white" value={newProject.name} onChange={e => setNewProject({...newProject, name: e.target.value})} required />
-            <input type="date" className="w-full bg-slate-900 p-2 border border-white/10 rounded text-white" value={newProject.due_date} onChange={e => setNewProject({...newProject, due_date: e.target.value})} required />
-            <button disabled={isPending} className="w-full bg-blue-600 text-white p-2 rounded">{isPending ? 'Saving...' : 'Create'}</button>
+      <Modal isOpen={isProjectModalOpen} onClose={() => { setIsProjectModalOpen(false); setEditingProject(null); }} title={editingProject ? "Edit Project" : "New Project"}>
+         <form onSubmit={editingProject ? handleUpdateProject : handleCreateProject} className="space-y-4">
+            <input placeholder="Name" className="w-full bg-slate-900 p-2 border border-white/10 rounded text-white" value={editingProject ? editingProject.name : newProject.name} onChange={e => editingProject ? setEditingProject({...editingProject, name: e.target.value}) : setNewProject({...newProject, name: e.target.value})} required />
+            <div className="grid grid-cols-2 gap-4">
+                <input type="date" className="w-full bg-slate-900 p-2 border border-white/10 rounded text-white" value={editingProject ? editingProject.due_date : newProject.due_date} onChange={e => editingProject ? setEditingProject({...editingProject, due_date: e.target.value}) : setNewProject({...newProject, due_date: e.target.value})} required />
+                {!editingProject && <input type="number" placeholder="Advance Amount" className="w-full bg-slate-900 p-2 border border-white/10 rounded text-white" value={newProject.advanceAmount} onChange={e => setNewProject({...newProject, advanceAmount: e.target.value})} />}
+            </div>
+            <input placeholder="Live Project Link (https://...)" className="w-full bg-slate-900 p-2 border border-white/10 rounded text-white" value={editingProject ? (editingProject.live_link || '') : newProject.live_link} onChange={e => editingProject ? setEditingProject({...editingProject, live_link: e.target.value}) : setNewProject({...newProject, live_link: e.target.value})} />
+            <button disabled={isPending} className="w-full bg-blue-600 text-white p-2 rounded">{isPending ? 'Saving...' : (editingProject ? 'Update' : 'Create')}</button>
          </form>
       </Modal>
 

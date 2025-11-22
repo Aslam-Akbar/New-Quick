@@ -99,7 +99,7 @@ export default function ClientsPage() {
         </div>
       </header>
 
-      <div className="bg-slate-800/50 border border-white/10 rounded-xl overflow-hidden">
+      <div className="bg-slate-800/50 border border-white/10 rounded-xl">
         <div className="p-6 flex flex-col sm:flex-row justify-between gap-4 border-b border-white/10">
           <div className="relative w-full sm:w-72">
             <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
