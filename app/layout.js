@@ -1,5 +1,5 @@
 import "./globals.css";
-import ClientLayout from "../src/components/ClientLayout";
+import ClientLayout from "./components/ClientLayout";
 
 export const metadata = {
   title: "Quick Tech Solutions | Premium Software Agency",

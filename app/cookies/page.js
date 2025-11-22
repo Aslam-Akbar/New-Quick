@@ -1,4 +1,4 @@
-import Cookies from "../../src/Cookies";
+import Cookies from "../components/Cookies";
 
 export const metadata = {
   title: "Cookie Policy | Quick Tech Solutions",

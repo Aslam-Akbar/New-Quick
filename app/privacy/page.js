@@ -1,4 +1,4 @@
-import Privacy from "../../src/Privacy";
+import Privacy from "../components/Privacy";
 
 export const metadata = {
   title: "Privacy Policy | Quick Tech Solutions",

@@ -1,4 +1,4 @@
-import Services from "../../src/Services";
+import Services from "../components/Services";
 
 export const metadata = {
   title: "Our Services | Quick Tech Solutions",

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { getJobPostings, toggleJobStatus, deleteJobPosting } from '../../../../src/actions/admin-careers';
+import { getJobPostings, toggleJobStatus, deleteJobPosting } from "../../../actions/admin-careers";
 import { Plus, Briefcase, MapPin, CheckCircle, XCircle, Trash2, MoreVertical } from 'lucide-react';
 
 export default function CareersPage() {

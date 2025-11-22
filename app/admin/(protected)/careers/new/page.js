@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createJobPosting } from '../../../../../src/actions/admin-careers';
+import { createJobPosting } from "../../../../actions/admin-careers";
 import { Save, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 

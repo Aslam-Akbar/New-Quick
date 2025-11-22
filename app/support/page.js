@@ -1,4 +1,4 @@
-import Support from "../../src/Support";
+import Support from "../components/Support";
 
 export const metadata = {
   title: "SLA & Support | Quick Tech Solutions",

@@ -1,4 +1,4 @@
-import ClientDashboard from "../../src/components/ClientDashboard";
+import ClientDashboard from "../components/ClientDashboard";
 import { cookies } from 'next/headers';
 
 export const metadata = {

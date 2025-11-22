@@ -1,4 +1,4 @@
-import Terms from "../../src/Terms";
+import Terms from "../components/Terms";
 
 export const metadata = {
   title: "Terms of Service | Quick Tech Solutions",

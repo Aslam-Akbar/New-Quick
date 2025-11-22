@@ -1,7 +1,7 @@
 import React from 'react';
 import { redirect } from 'next/navigation';
-import { verifyAdminSession } from '../../../src/actions/admin-auth';
-import AdminSidebar from '../../../src/components/admin/AdminSidebar';
+import { verifyAdminSession } from "../../actions/admin-auth";
+import AdminSidebar from "../../components/admin/AdminSidebar";
 // import '../../../src/assets/css/dashboard.css'; // Removed
 
 export default async function AdminLayout({ children }) {

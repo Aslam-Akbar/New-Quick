@@ -1,4 +1,4 @@
-import Process from "../../src/Process";
+import Process from "../components/Process";
 
 export const metadata = {
   title: "Our Process | Quick Tech Solutions",

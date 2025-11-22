@@ -1,4 +1,4 @@
-import Contact from "../../src/Contact";
+import Contact from "../components/Contact";
 
 export const metadata = {
   title: "Contact Us | Quick Tech Solutions",

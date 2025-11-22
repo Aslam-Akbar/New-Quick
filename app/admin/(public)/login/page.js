@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { loginAdmin } from '../../../../src/actions/admin-auth';
+import { loginAdmin } from "../../../actions/admin-auth";
 import { Lock, Mail, ArrowRight } from 'lucide-react';
 // import '../../../../src/assets/css/dashboard.css'; // Removed
 

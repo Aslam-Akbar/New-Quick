@@ -1,4 +1,4 @@
-import Careers from "../../src/Careers";
+import Careers from "../components/Careers";
 
 export const metadata = {
   title: "Careers | Join Quick Tech Solutions",

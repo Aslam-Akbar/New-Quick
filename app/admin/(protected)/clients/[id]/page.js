@@ -2,11 +2,11 @@
 
 import React, { useEffect, useMemo, useState, useTransition } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { getClientById } from '../../../../../src/actions/admin-clients';
-import { getClientProjects, createProject, deleteProject, updateProject } from '../../../../../src/actions/admin-projects';
-import { getClientInvoices, createInvoice, deleteInvoice, markInvoicePaid } from '../../../../../src/actions/admin-invoices';
-import { getClientTickets, closeTicket } from '../../../../../src/actions/admin-tickets';
-import Modal from '../../../../../src/components/admin/Modal';
+import { getClientById } from "../../../../actions/admin-clients";
+import { getClientProjects, createProject, deleteProject, updateProject } from "../../../../actions/admin-projects";
+import { getClientInvoices, createInvoice, deleteInvoice, markInvoicePaid } from "../../../../actions/admin-invoices";
+import { getClientTickets, closeTicket } from "../../../../actions/admin-tickets";
+import Modal from "../../../../components/admin/Modal";
 import {
   Building, Mail, Phone, MapPin, Calendar,
   Briefcase, FileText, MessageSquare, ArrowLeft, Plus,

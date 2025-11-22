@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from "react";
-import { getPublicJobPostings } from "./actions/public-careers";
+import { getPublicJobPostings } from "../actions/public-careers";
 import { FaUsers, FaLaptopCode, FaCoffee, FaHeart } from "react-icons/fa";
 // import "./assets/css/style.css"; // Removed
 

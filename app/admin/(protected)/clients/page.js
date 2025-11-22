@@ -1,8 +1,8 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { getClients, createClient, deleteClient } from '../../../../src/actions/admin-clients';
-import Modal from '../../../../src/components/admin/Modal';
+import { getClients, createClient, deleteClient } from "../../../actions/admin-clients";
+import Modal from "../../../components/admin/Modal";
 import { Search, MoreVertical, Mail, Building, Plus, User, Phone, MapPin, Briefcase, Lock, Edit, Trash2 } from 'lucide-react';
 
 export default function ClientsPage() {

@@ -1,4 +1,4 @@
-import About from "../../src/About";
+import About from "../components/About";
 
 export const metadata = {
   title: "About Us | Quick Tech Solutions",

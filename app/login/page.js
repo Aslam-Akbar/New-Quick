@@ -1,4 +1,4 @@
-import Login from "../../src/Login";
+import Login from "../components/Login";
 
 export const metadata = {
   title: "Client Login | Quick Tech Solutions",

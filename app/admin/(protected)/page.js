@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Users, Briefcase, FileText, MessageSquare } from 'lucide-react';
-import { getAdminDashboardStats } from '../../../src/actions/admin-dashboard';
+import { getAdminDashboardStats } from "../../actions/admin-dashboard";
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({

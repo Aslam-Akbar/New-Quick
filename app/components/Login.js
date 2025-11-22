@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { login } from "./actions/auth";
+import { login } from "../actions/auth";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";

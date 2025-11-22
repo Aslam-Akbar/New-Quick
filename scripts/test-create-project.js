@@ -1,5 +1,5 @@
-import { createProject } from '../src/actions/admin-projects.js';
-import { query } from '../src/lib/db.js';
+import { createProject } from '../app/actions/admin-projects.js';
+import { query } from '../app/lib/db.js';
 
 // Mock revalidatePath since we are running in a script
 jest.mock('next/cache', () => ({
