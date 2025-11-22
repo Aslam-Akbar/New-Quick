@@ -25,7 +25,7 @@ import {
 // Import sub-views
 import ProjectsView from './portal-views/ProjectsView';
 import InvoicesView from './portal-views/InvoicesView';
-import AssetsView from './portal-views/AssetsView';
+
 import SupportView from './portal-views/SupportView';
 import SettingsView from './portal-views/SettingsView';
 
@@ -98,7 +98,7 @@ const ClientDashboard = ({ userEmail }) => {
             { id: 'dashboard', icon: LayoutDashboard, label: 'Overview' },
             { id: 'projects', icon: FolderKanban, label: 'My Projects' },
             { id: 'invoices', icon: FileText, label: 'Invoices' },
-            { id: 'assets', icon: File, label: 'Assets' },
+
             { id: 'support', icon: LifeBuoy, label: 'Support' },
             { id: 'settings', icon: Settings, label: 'Settings' }
           ].map((item) => (
@@ -157,7 +157,7 @@ const ClientDashboard = ({ userEmail }) => {
         <div className="dashboard-content">
           {activeView === 'projects' && <ProjectsView userEmail={userEmail} />}
           {activeView === 'invoices' && <InvoicesView userEmail={userEmail} />}
-          {activeView === 'assets' && <AssetsView userEmail={userEmail} />}
+
           {activeView === 'support' && <SupportView userEmail={userEmail} />}
           {activeView === 'settings' && <SettingsView userEmail={userEmail} />}
           
